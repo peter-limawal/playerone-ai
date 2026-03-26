@@ -11,6 +11,18 @@ This repository is not the benchmark suite. It is the library and reference impl
 
 The evaluation and model-comparison layer lives in `playerone-arena`.
 
+## Current Direction
+
+The first concrete direction for `playerone-ai` is:
+
+- game: `Super Mario Bros.`
+- runtime candidate: `stable-retro`
+- execution: local only
+- observation mode: screen-first
+- control mode: controller-state based
+
+The goal is to build a reusable runtime where one agent can play one game through a stable interface, while leaving model comparison and benchmarking to `playerone-arena`.
+
 ## Purpose
 
 The goal of `playerone-ai` is to make game-playing agents composable.
@@ -62,8 +74,8 @@ Current assumptions:
 
 - local execution only
 - Python 3.11+
-- one game integration first
-- one model backend first
+- one game integration first, starting with `Super Mario Bros.`
+- one runtime backend first, with `stable-retro` as the leading candidate
 - extensible interfaces so more games and models can be added later
 
 ## Architecture
@@ -82,14 +94,9 @@ This structure will continue to evolve toward a more library-first interface as 
 
 This repo is still in the setup stage.
 
-There is early prototype code for:
+The current focus is to define the runtime boundaries before implementing them.
 
-- a retro environment wrapper
-- a simple LLM-driven agent loop
-- a local model client interface
-- JSONL episode logging
-
-That code is a starting point, not the final architecture.
+The first design artifact is the architecture note at [docs/architecture.md](/Users/plimawal/Desktop/projects/playerone-ai/docs/architecture.md).
 
 ## Development Principle
 
