@@ -13,12 +13,12 @@ This repository is not responsible for cross-model evaluation, repeated benchmar
 The current v0 direction is:
 
 - game: `Super Mario Bros.`
-- emulator/runtime candidate: `stable-retro`
+- emulator/runtime backend: `nes-py` via `gym-super-mario-bros`
 - execution model: local only
 - primary observation mode: screen-first
 - primary control mode: controller-state based
 
-The exact runtime backend can change if implementation constraints force a better choice, but the working direction is NES-era Mario through a locally automated emulator.
+The exact runtime backend can still change later, but the current validated direction is the `nes-py` / `gym-super-mario-bros` path for NES-era Mario.
 
 ## System Overview
 

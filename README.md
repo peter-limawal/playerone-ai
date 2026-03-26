@@ -16,7 +16,7 @@ The evaluation and model-comparison layer lives in `playerone-arena`.
 The first concrete direction for `playerone-ai` is:
 
 - game: `Super Mario Bros.`
-- runtime candidate: `stable-retro`
+- runtime backend: `nes-py` via `gym-super-mario-bros`
 - execution: local only
 - observation mode: screen-first
 - control mode: controller-state based
@@ -75,7 +75,7 @@ Current assumptions:
 - local execution only
 - Python 3.11+
 - one game integration first, starting with `Super Mario Bros.`
-- one runtime backend first, with `stable-retro` as the leading candidate
+- one working runtime backend first, currently `nes-py` via `gym-super-mario-bros`
 - extensible interfaces so more games and models can be added later
 
 ## Architecture
@@ -97,6 +97,7 @@ This repo is still in the setup stage.
 The current focus is to define the runtime boundaries before implementing them.
 
 The first design artifact is the architecture note at [docs/architecture.md](/Users/plimawal/Desktop/projects/playerone-ai/docs/architecture.md).
+The current validated backend path is the `nes-py` / `gym-super-mario-bros` runtime for `Super Mario Bros.`.
 
 ## Development Principle
 

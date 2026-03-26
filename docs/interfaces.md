@@ -9,7 +9,7 @@ These interfaces are intended to be stable enough to guide initial implementatio
 The current v0 assumptions are:
 
 - game: `Super Mario Bros.`
-- backend: `stable-retro`
+- backend: `nes-py` via `gym-super-mario-bros`
 - observation mode: screen-first
 - control mode: controller-state based
 - execution model: local only
@@ -174,7 +174,7 @@ The runner should:
 
 ### Why the Runner Owns Scheduling
 
-`stable-retro` only supports a conventional `step(action)` loop.
+The current NES backend only supports a conventional `step(action)` loop.
 
 That means the runner must be the layer that implements:
 
@@ -185,7 +185,7 @@ The backend remains a low-level game runtime. The runner creates the higher-leve
 
 ## 6. Backend Adapter Contract
 
-The backend adapter is the boundary between `playerone-ai` and a concrete runtime such as `stable-retro`.
+The backend adapter is the boundary between `playerone-ai` and a concrete runtime such as `nes-py`.
 
 ### Responsibility
 
@@ -209,12 +209,12 @@ The backend adapter should not:
 
 For the first concrete backend:
 
-- `ControllerState` maps to the button-mask format required by `stable-retro`
-- `ObservationPacket.current_frame` comes from the image observation returned by the environment
-- `ObservationPacket.recent_frames` is assembled by `playerone-ai`, not by `stable-retro`
-- `AgentDecision.next_look_after_frames` is interpreted by the runner, not by `stable-retro`
+- `ControllerState` maps to the raw 8-bit NES controller action expected by `nes-py`
+- `ObservationPacket.current_frame` comes from the image observation returned by `gym-super-mario-bros`
+- `ObservationPacket.recent_frames` is assembled by `playerone-ai`, not by the backend
+- `AgentDecision.next_look_after_frames` is interpreted by the runner, not by `nes-py`
 
-This is the core architectural consequence of choosing `stable-retro`.
+This is the core architectural consequence of choosing the current NES backend path.
 
 ## Open Questions
 
