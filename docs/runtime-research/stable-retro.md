@@ -181,6 +181,72 @@ Reasons:
 - it is actively maintained
 - it gives us enough low-level control to build our own higher-level runtime abstractions on top
 
+## Local Validation Notes
+
+The first local validation attempt on this machine exposed an implementation risk on Apple Silicon macOS:
+
+- the published `stable-retro` wheel installed for Python 3.12 loaded an `x86_64` native extension, which failed to import under an `arm64` Python interpreter
+- a follow-up source build attempt for `stable-retro==0.9.9` also failed during CMake configuration because the build expected a missing `tests/` directory
+
+Implication:
+
+- `stable-retro` is still the leading backend candidate in principle
+- but it is not currently plug-and-play on this machine
+- before deeper runtime work continues, we may need one of:
+  - a compatible wheel or source-build fix from `stable-retro`
+  - an x86_64 Python environment under Rosetta
+  - a Docker or Linux-based runtime path
+  - a fallback emulator/runtime choice if local compatibility remains blocked
+
+This is a local environment constraint, not a rejection of the overall `stable-retro` architecture fit.
+
+## What Other Users Appear To Do
+
+The upstream project and related community resources point to three practical usage patterns:
+
+### 1. Standard local install
+
+The official README recommends:
+
+- `pip3 install stable-retro`
+- or `pip3 install git+https://github.com/Farama-Foundation/stable-retro.git`
+- or `pip3 install -e .` from a local clone for development
+
+This appears to be the default path on platforms where the native build works cleanly.
+
+### 2. Apple Silicon source build
+
+The official macOS installation guide has a dedicated Apple Silicon section and recommends:
+
+- Python 3.10
+- Homebrew dependencies such as `pkg-config`, `lua@5.3`, `libzip`, `qt@5`, and `capnp`
+- setting `SDKROOT`
+- building from source with `pip install -e .`
+
+This indicates that Apple Silicon users are expected to rely on a more manual build path than the standard wheel install.
+
+### 3. Docker on Apple Silicon
+
+The official macOS installation guide also points Apple Silicon users to a Docker-based alternative.
+
+The linked `stable-retro-docker` project describes using:
+
+- Docker on macOS
+- `--platform linux/amd64`
+- optional XQuartz display forwarding for GUI support
+
+This is the clearest example of how people work around local macOS / Apple Silicon compatibility issues in practice.
+
+## Current Recommendation For This Repo
+
+For `playerone-ai`, the most practical near-term validation path on this machine is:
+
+1. keep `stable-retro` as the leading backend candidate
+2. stop treating the native macOS wheel as the primary setup path
+3. validate the backend through a Docker-based Linux environment first
+
+This does not lock the project into Docker forever. It is simply the most reliable way to continue validating the runtime abstraction while avoiding local native build issues on Apple Silicon.
+
 ## Sources
 
 - Stable-Retro Python API: https://stable-retro.farama.org/python/
@@ -188,3 +254,6 @@ Reasons:
 - Stable-Retro action enums: https://stable-retro.farama.org/main/_modules/retro/enums/
 - Stable-Retro `RetroEnv.step()` implementation: https://stable-retro.farama.org/_modules/stable_retro/retro_env/
 - Stable-Retro integration docs: https://stable-retro.farama.org/main/integration/
+- Stable-Retro README: https://github.com/Farama-Foundation/stable-retro
+- Stable-Retro macOS installation guide: https://github.com/Farama-Foundation/stable-retro/blob/master/docs/macos_installation.md
+- Apple Silicon Docker example: https://github.com/arvganesh/stable-retro-docker

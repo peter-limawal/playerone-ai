@@ -12,7 +12,15 @@ from playerone_ai.controls import ControllerState
 try:
     import stable_retro as retro
 except ImportError:  # pragma: no cover - optional dependency
-    retro = None
+    _IMPORT_ERROR_REASON = "Could not import `stable_retro`."
+    try:
+        import retro  # type: ignore[no-redef]
+        _IMPORT_ERROR_REASON = "Imported `retro` compatibility module."
+    except ImportError as exc:
+        retro = None
+        _IMPORT_ERROR_REASON = str(exc)
+else:
+    _IMPORT_ERROR_REASON = None
 
 
 NES_BUTTON_ORDER = (
@@ -48,7 +56,8 @@ class StableRetroBackend:
         if retro is None:
             raise ImportError(
                 "stable-retro is required for StableRetroBackend. "
-                "Install it with `pip install -e .[stable-retro]`."
+                "Install it with `pip install -e .[stable-retro]`. "
+                f"Import failure detail: {_IMPORT_ERROR_REASON}"
             )
 
     def reset(self) -> tuple[np.ndarray, dict[str, Any]]:

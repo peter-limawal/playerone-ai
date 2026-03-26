@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    git \
+    cmake \
+    build-essential \
+    pkg-config \
+    zlib1g-dev \
+    libzip-dev \
+    lua5.3 \
+    liblua5.3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+# Copy only the project files needed for installation and validation.
+COPY README.md pyproject.toml ./
+COPY playerone_ai ./playerone_ai
+COPY scripts ./scripts
+
+RUN python3 -m pip install -U pip
+RUN python3 -m pip install -e ".[stable-retro]"
+
+CMD ["python3", "scripts/smoke_test_stable_retro.py"]
